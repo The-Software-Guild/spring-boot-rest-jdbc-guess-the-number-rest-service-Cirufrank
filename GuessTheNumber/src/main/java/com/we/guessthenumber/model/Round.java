@@ -4,6 +4,7 @@
  */
 package com.we.guessthenumber.model;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 /**
@@ -14,12 +15,24 @@ public class Round {
     
     private int roundId, gameId, guess;
     
-    private LocalDateTime guessTime;
+    private Date guessTime;
     
     private String result;
     
+    public Round(int roundId, int gameId, int guess, Date guessTime, 
+            String result) {
+        this.roundId = roundId;
+        this.gameId = gameId;
+        this.guess = guess;
+        this.guessTime = guessTime;
+    }
+    
     public int getRoundId() {
         return roundId;
+    }
+    
+    public void setRoundId(int roundId) {
+        this.roundId = roundId;
     }
     
     public int getGameId() {
@@ -30,7 +43,7 @@ public class Round {
         return guess;
     }
     
-    public LocalDateTime getGuessTime() {
+    public Date getGuessTime() {
         return guessTime;
     }
     

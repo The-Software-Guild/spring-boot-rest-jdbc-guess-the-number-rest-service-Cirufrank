@@ -14,6 +14,11 @@ public class Game {
             answer;
     
     private boolean inProgress;
+    
+    public Game() {
+        
+    }
+    
     public Game(int gameId, int answer, boolean inProgress) {
         this.gameId = gameId;
         this.answer = answer;
@@ -24,8 +29,16 @@ public class Game {
         return gameId;
     }
     
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
+    }
+    
     public int getAnswer() {
         return answer;
+    }
+    
+    public void setAnswer(int answer) {
+        this.answer = answer;
     }
     
     public boolean getInProgress() {

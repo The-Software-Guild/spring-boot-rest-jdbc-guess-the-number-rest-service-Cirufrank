@@ -82,6 +82,8 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
+*application.properties*
+resources/*
 
 ##############################
 ## Visual Studio Code
