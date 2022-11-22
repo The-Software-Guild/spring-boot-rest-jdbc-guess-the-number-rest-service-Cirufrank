@@ -5,7 +5,6 @@
 package com.we.guessthenumber.data;
 
 import com.we.guessthenumber.model.Game;
-import com.we.guessthenumber.model.Round;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,11 +22,11 @@ import org.springframework.stereotype.Repository;
  * @author ciruf
  */
 @Repository
-public class GuessTheNumberDaoDB implements GuessTheNumberDao {
+public class GameDaoDB implements GameDao {
     private final JdbcTemplate jdbcTemplate;
     
     @Autowired
-    public GuessTheNumberDaoDB(JdbcTemplate jdbcTemplate) {
+    public GameDaoDB(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
     
@@ -51,26 +50,6 @@ public class GuessTheNumberDaoDB implements GuessTheNumberDao {
        return game;
     }
     
-    @Override
-    public Round addRound(Round round) {
-        final String sql = "INSERT INTO round(gameId, guess, result) "
-                + "VALUES(?,?,?);";
-        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        
-        jdbcTemplate.update((Connection conn) -> {
-            PreparedStatement statement = conn.prepareStatement(sql, 
-                    Statement.RETURN_GENERATED_KEYS);
-        statement.setInt(1, round.getGameId());
-        statement.setInt(2, round.getGuess());
-        statement.setString(3, round.getResult());
-        return statement;
-        
-        }, keyHolder);
-        
-        round.setRoundId(keyHolder.getKey().intValue());
-        return round;
-    }
-    
     @Override public boolean updateGame(Game game) {
         final String sql = "UPDATE game SET inProgress = ? WHERE "
                 + "gameId = ?";
@@ -79,26 +58,20 @@ public class GuessTheNumberDaoDB implements GuessTheNumberDao {
                 game.getGameId()) > 0;
     }
     
-   @Override
-   public Game getGame(int gameId) {
-       final String sql = "SELECT gameId, answer, inProgress FROM game WHERE id = ?";
-       
-       return jdbcTemplate.queryForObject(sql, new GameMapper(), gameId);
-   }
-   
-   @Override
-   public List<Game> getAllGames() {
-       final String sql = "SELECT * FROM game;";
-       return jdbcTemplate.query(sql, new GameMapper());
-   }
-   
-   @Override
-   public List<Round> getAllGameRounds(int gameId) {
-       final String sql = "SELECT * FROM round WHERE gameId = ?";
-       return jdbcTemplate.query(sql, new RoundMapper(), gameId);
-   }
-   
-   private static final class GameMapper implements RowMapper<Game> {
+    @Override
+    public Game getGame(int gameId) {
+        final String sql = "SELECT gameId, answer, inProgress FROM game WHERE id = ?";
+
+        return jdbcTemplate.queryForObject(sql, new GameMapper(), gameId);
+    }
+    
+    @Override
+    public List<Game> getAllGames() {
+        final String sql = "SELECT * FROM game;";
+        return jdbcTemplate.query(sql, new GameMapper());
+    }
+    
+    private static final class GameMapper implements RowMapper<Game> {
        
        @Override
        public Game mapRow(ResultSet rs, int index) throws SQLException {
@@ -109,15 +82,4 @@ public class GuessTheNumberDaoDB implements GuessTheNumberDao {
            return game;
        }
    }
-   
-   private static final class RoundMapper implements RowMapper<Round> {
-       @Override
-       public Round mapRow(ResultSet rs, int index) throws SQLException {
-           Round round = new Round(rs.getInt("roundId"),
-                            rs.getInt("gameId"),
-           rs.getInt("guess"), rs.getTimestamp("guessTime").toLocalDateTime(),
-           rs.getString("result"));
-           return round;
-       }
-    }
 }

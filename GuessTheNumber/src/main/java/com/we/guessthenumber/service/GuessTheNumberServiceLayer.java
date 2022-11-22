@@ -5,6 +5,7 @@
 package com.we.guessthenumber.service;
 
 import com.we.guessthenumber.model.Game;
+import com.we.guessthenumber.model.Round;
 import java.util.List;
 import java.util.Map;
 
@@ -39,8 +40,7 @@ public interface GuessTheNumberServiceLayer {
      * @return List<Game> A List object of all games with any 
      * in progress games having their answers masked
      */
-    public void getGamesWithConditionalMasking(List<Game>
-            allGames);
+    public List<Game> getGamesWithConditionalMasking();
     /**
      * Generates a four-digit number for a game
      *
@@ -56,6 +56,15 @@ public interface GuessTheNumberServiceLayer {
      * @return String a four digit number padded with zeroes if needed
      */
     public String formatFourDigitNumber(int fourDigitNumber);
+    public Game getGame(int gameId);
+    public boolean updateGame(Game game);
+    
+    public List<Round> getAllGameRounds(int gameId);
+    
+    public Game beginGame();
+    
+    public Round makeGuess(int guess, int gameId);
+    
     
     
 }

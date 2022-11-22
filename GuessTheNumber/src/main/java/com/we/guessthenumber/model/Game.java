@@ -10,8 +10,8 @@ package com.we.guessthenumber.model;
  */
 public class Game {
     
-    private int gameId,
-            answer;
+    private int gameId;
+    private String answer;
     
     private boolean inProgress;
     
@@ -19,11 +19,16 @@ public class Game {
         
     }
     
-    public Game(int gameId, int answer, boolean inProgress) {
+    public Game(String answer) {
+        this.answer = answer;
+    }
+    
+    public Game(int gameId, String answer, boolean inProgress) {
         this.gameId = gameId;
         this.answer = answer;
         this.inProgress = inProgress;
     } 
+    
     
     public int getGameId() {
         return gameId;
@@ -33,11 +38,11 @@ public class Game {
         this.gameId = gameId;
     }
     
-    public int getAnswer() {
+    public String getAnswer() {
         return answer;
     }
     
-    public void setAnswer(int answer) {
+    public void setAnswer(String answer) {
         this.answer = answer;
     }
     

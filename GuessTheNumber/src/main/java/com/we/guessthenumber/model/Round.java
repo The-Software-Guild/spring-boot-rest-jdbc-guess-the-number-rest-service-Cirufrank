@@ -15,11 +15,17 @@ public class Round {
     
     private int roundId, gameId, guess;
     
-    private Date guessTime;
+    private LocalDateTime guessTime;
     
     private String result;
     
-    public Round(int roundId, int gameId, int guess, Date guessTime, 
+    public Round(int gameId, int guess, String result) {
+        this.gameId = gameId;
+        this.guess = guess;
+        this.result = result;
+    }
+    
+    public Round(int roundId, int gameId, int guess, LocalDateTime guessTime, 
             String result) {
         this.roundId = roundId;
         this.gameId = gameId;
@@ -43,7 +49,7 @@ public class Round {
         return guess;
     }
     
-    public Date getGuessTime() {
+    public LocalDateTime getGuessTime() {
         return guessTime;
     }
     
