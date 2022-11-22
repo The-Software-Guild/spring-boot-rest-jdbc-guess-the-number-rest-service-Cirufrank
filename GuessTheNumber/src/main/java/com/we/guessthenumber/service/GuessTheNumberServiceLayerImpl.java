@@ -34,13 +34,47 @@ public class GuessTheNumberServiceLayerImpl implements GuessTheNumberServiceLaye
         this.roundDao = roundDao;
     }
     
+    @Override
+    public Game getGame(int gameId) {
+        return addGameMasking(gameDao.getGame(gameId));
+    }
+    
+    
+    public boolean updateGame(Game game) {
+        return gameDao.updateGame(game);
+    }
+    
+    @Override
+    public List<Round> getAllGameRounds(int gameId) {
+        return roundDao.getAllGameRounds(gameId);
+    }
+    
+    @Override
+    public Game beginGame() {
+        final int gameAnswer = generateFourDigitNumber();
+        final Game createdGame = new Game(Integer.toString(gameAnswer));
+        return gameDao.addGame(createdGame);
+    }
+    
+    @Override
+    public Round makeGuess(int guess, int gameId) {
+        final Game roundGame = gameDao.getGame(gameId);
+        if (roundGame.getInProgress() == false) return null;
+        final int gameAnswer = Integer.parseInt(roundGame.getAnswer());
+        final String result = displayExactAndPartialMatches(gameAnswer, guess).intern();
+        checkGameStatus(roundGame, result);
+        final Round newRound = new Round(gameId, guess, LocalDateTime.now(), result);
+        return roundDao.addRound(newRound);
+    }
+    
+    @Override
     public List<Game> getGamesWithConditionalMasking() {
         final List<Game> allGames = addMaskingToAllGames(gameDao.getAllGames());
         return allGames;
     }
     
-    @Override
-    public Map<Integer, Integer> findExactMatches(int answer, int guess) {
+    
+    private Map<Integer, Integer> findExactMatches(int answer, int guess) {
         final Map<Integer, Integer> exactMatches = new HashMap<>();
         final List<Integer> answerTokens = convertIntToList(answer);
         final List<Integer> guessTokens = convertIntToList(guess);
@@ -55,8 +89,8 @@ public class GuessTheNumberServiceLayerImpl implements GuessTheNumberServiceLaye
         return exactMatches;
     }
     
-    @Override 
-    public List<Integer> findPartialMatches(int answer, int guess) {
+    
+    private List<Integer> findPartialMatches(int answer, int guess) {
         final Map<Integer, Integer> exactMatches = findExactMatches(answer, guess);
         final List<Integer> partialMatches = new ArrayList<>();
         final List<Integer> answerTokens = convertIntToList(answer);
@@ -106,15 +140,15 @@ public class GuessTheNumberServiceLayerImpl implements GuessTheNumberServiceLaye
         return game;
     }
     
-    @Override
-    public int generateFourDigitNumber() {
+    
+    private int generateFourDigitNumber() {
         final Random randNumGenerator = new Random();
         final int fourDigitNumber = randNumGenerator.nextInt(10000);
         return fourDigitNumber;
     }
     
-    @Override
-    public String formatFourDigitNumber(int fourDigitNumber) {
+    
+    private String formatFourDigitNumber(int fourDigitNumber) {
         return String.format("%04d", fourDigitNumber);
     }
     private List<Integer> convertIntToList(int integer) {
@@ -127,40 +161,7 @@ public class GuessTheNumberServiceLayerImpl implements GuessTheNumberServiceLaye
         }
         return integerTokens;
     }
-    
-    @Override
-    public Game getGame(int gameId) {
-        return addGameMasking(gameDao.getGame(gameId));
-    }
-    
-    @Override
-    public boolean updateGame(Game game) {
-        return gameDao.updateGame(game);
-    }
-    
-    @Override
-    public List<Round> getAllGameRounds(int gameId) {
-        return roundDao.getAllGameRounds(gameId);
-    }
-    
-    @Override
-    public Game beginGame() {
-        final int gameAnswer = generateFourDigitNumber();
-        final Game createdGame = new Game(Integer.toString(gameAnswer));
-        return gameDao.addGame(createdGame);
-    }
-    
-    @Override
-    public Round makeGuess(int guess, int gameId) {
-        final Game roundGame = gameDao.getGame(gameId);
-        if (roundGame.getInProgress() == false) return null;
-        final int gameAnswer = Integer.parseInt(roundGame.getAnswer());
-        final String result = displayExactAndPartialMatches(gameAnswer, guess).intern();
-        checkGameStatus(roundGame, result);
-        final Round newRound = new Round(gameId, guess, LocalDateTime.now(), result);
-        return roundDao.addRound(newRound);
-    }
-    
+     
     private void checkGameStatus(Game game, String result) {
         final String COMPLETED_GAME = "e:4:p:0".intern();
         if (result == COMPLETED_GAME) {

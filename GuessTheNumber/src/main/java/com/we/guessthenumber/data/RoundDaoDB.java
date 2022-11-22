@@ -59,6 +59,12 @@ public class RoundDaoDB implements RoundDao {
         return jdbcTemplate.query(sql, new RoundMapper(), gameId);
     }
     
+    @Override
+    public void deleteRoundById(int roundId) {
+        final String sql = "DELETE FROM round WHERE roundId = ?;";
+        jdbcTemplate.update(sql, roundId);
+    }
+    
     private static final class RoundMapper implements RowMapper<Round> {
        @Override
        public Round mapRow(ResultSet rs, int index) throws SQLException {

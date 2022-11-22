@@ -70,6 +70,11 @@ public class GameDaoDB implements GameDao {
         final String sql = "SELECT * FROM game;";
         return jdbcTemplate.query(sql, new GameMapper());
     }
+    @Override
+    public void deleteGameById(int gameId) {
+        final String sql = "DELETE FROM game WHERE gameId = ?;";
+        jdbcTemplate.update(sql, gameId);
+    }
     
     private static final class GameMapper implements RowMapper<Game> {
        

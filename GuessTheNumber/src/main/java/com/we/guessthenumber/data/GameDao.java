@@ -16,4 +16,5 @@ public interface GameDao {
     public boolean updateGame(Game gameToUpdate);
     public Game getGame(int gameId);
     public List<Game> getAllGames();
+    public void deleteGameById(int gameId);
 }
