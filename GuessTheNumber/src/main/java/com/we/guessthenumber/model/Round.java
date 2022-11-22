@@ -19,9 +19,10 @@ public class Round {
     
     private String result;
     
-    public Round(int gameId, int guess, String result) {
+    public Round(int gameId, int guess, LocalDateTime guessTime, String result) {
         this.gameId = gameId;
         this.guess = guess;
+        this.guessTime = guessTime;
         this.result = result;
     }
     
@@ -31,6 +32,7 @@ public class Round {
         this.gameId = gameId;
         this.guess = guess;
         this.guessTime = guessTime;
+        this.result = result;
     }
     
     public int getRoundId() {

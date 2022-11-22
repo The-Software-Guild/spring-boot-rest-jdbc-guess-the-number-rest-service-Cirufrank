@@ -6,6 +6,7 @@ package com.we.guessthenumber.controller;
 
 import com.we.guessthenumber.data.GuessTheNumberDao;
 import com.we.guessthenumber.model.Game;
+import com.we.guessthenumber.model.Guess;
 import com.we.guessthenumber.model.Round;
 import com.we.guessthenumber.service.GuessTheNumberServiceLayer;
 import java.util.List;
@@ -49,18 +50,18 @@ public class GuessTheNumberController {
         return ResponseEntity.ok(result);
     }
     
-    @PutMapping("game/{gameId}")
-    public ResponseEntity update(@PathVariable int gameId, @RequestBody Game game) {
-        ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
-        if (gameId != game.getGameId()) {
-            response = new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
-            
-        } else if (service.updateGame(game)) {
-            response = new ResponseEntity(HttpStatus.NO_CONTENT);
-        }
-        
-        return response;
-    }
+//    @PutMapping("game/{gameId}")
+//    public ResponseEntity update(@PathVariable int gameId, @RequestBody Game game) {
+//        ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
+//        if (gameId != game.getGameId()) {
+//            response = new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
+//            
+//        } else if (service.updateGame(game)) {
+//            response = new ResponseEntity(HttpStatus.NO_CONTENT);
+//        }
+//        
+//        return response;
+//    }
     
     @GetMapping("rounds/{gameId}")
     public List<Round> getAllGameRounds(@PathVariable int gameId) {
@@ -75,9 +76,12 @@ public class GuessTheNumberController {
     }
     
     @PostMapping("/guess")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Round makeGuess(@RequestBody int guess, int gameId) {
-        return service.makeGuess(guess, gameId);
+    public ResponseEntity<Round> makeGuess(@RequestBody Guess guess) {
+        final Round roundCreated = service.makeGuess(guess.getGuess(), guess.getGameId());
+        if (roundCreated == null) {
+            return new ResponseEntity(roundCreated, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(roundCreated, HttpStatus.CREATED);
     }
     
     

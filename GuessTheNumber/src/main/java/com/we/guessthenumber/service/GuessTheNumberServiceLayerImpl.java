@@ -5,10 +5,10 @@
 package com.we.guessthenumber.service;
 
 import com.we.guessthenumber.data.GameDao;
-import com.we.guessthenumber.data.GuessTheNumberDao;
 import com.we.guessthenumber.data.RoundDao;
 import com.we.guessthenumber.model.Game;
 import com.we.guessthenumber.model.Round;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,7 +35,7 @@ public class GuessTheNumberServiceLayerImpl implements GuessTheNumberServiceLaye
     }
     
     public List<Game> getGamesWithConditionalMasking() {
-        final List<Game> allGames = addGameMasking(gameDao.getAllGames());
+        final List<Game> allGames = addMaskingToAllGames(gameDao.getAllGames());
         return allGames;
     }
     
@@ -91,14 +91,19 @@ public class GuessTheNumberServiceLayerImpl implements GuessTheNumberServiceLaye
     }
     
     
-    private List<Game> addGameMasking(List<Game> allGames) {
-        final String MASKING = "****";
+    private List<Game> addMaskingToAllGames(List<Game> allGames) {
         for (Game currentGame: allGames) {
-            if (currentGame.getInProgress() == true) {
-                currentGame.setAnswer(MASKING);
-            }
+            currentGame = addGameMasking(currentGame);
         }
         return allGames;
+    }
+    
+    private Game addGameMasking(Game game) {
+        final String MASKING = "****";
+            if (game.getInProgress() == true) {
+                game.setAnswer(MASKING);
+            }
+        return game;
     }
     
     @Override
@@ -125,7 +130,7 @@ public class GuessTheNumberServiceLayerImpl implements GuessTheNumberServiceLaye
     
     @Override
     public Game getGame(int gameId) {
-        return gameDao.getGame(gameId);
+        return addGameMasking(gameDao.getGame(gameId));
     }
     
     @Override
@@ -148,10 +153,20 @@ public class GuessTheNumberServiceLayerImpl implements GuessTheNumberServiceLaye
     @Override
     public Round makeGuess(int guess, int gameId) {
         final Game roundGame = gameDao.getGame(gameId);
+        if (roundGame.getInProgress() == false) return null;
         final int gameAnswer = Integer.parseInt(roundGame.getAnswer());
-        final String result = displayExactAndPartialMatches(gameAnswer, guess);
-        final Round newRound = new Round(gameId, guess, result);
+        final String result = displayExactAndPartialMatches(gameAnswer, guess).intern();
+        checkGameStatus(roundGame, result);
+        final Round newRound = new Round(gameId, guess, LocalDateTime.now(), result);
         return roundDao.addRound(newRound);
+    }
+    
+    private void checkGameStatus(Game game, String result) {
+        final String COMPLETED_GAME = "e:4:p:0".intern();
+        if (result == COMPLETED_GAME) {
+            game.setInProgress(false);
+            gameDao.updateGame(game);
+        }
     }
     
     

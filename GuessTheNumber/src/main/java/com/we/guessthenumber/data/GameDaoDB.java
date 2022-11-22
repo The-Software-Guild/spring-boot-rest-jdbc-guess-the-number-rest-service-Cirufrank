@@ -60,7 +60,7 @@ public class GameDaoDB implements GameDao {
     
     @Override
     public Game getGame(int gameId) {
-        final String sql = "SELECT gameId, answer, inProgress FROM game WHERE id = ?";
+        final String sql = "SELECT gameId, answer, inProgress FROM game WHERE gameId = ?;";
 
         return jdbcTemplate.queryForObject(sql, new GameMapper(), gameId);
     }

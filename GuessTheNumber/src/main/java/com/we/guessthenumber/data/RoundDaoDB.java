@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,8 +34,8 @@ public class RoundDaoDB implements RoundDao {
     
     @Override
     public Round addRound(Round round) {
-        final String sql = "INSERT INTO round(gameId, guess, result) "
-                + "VALUES(?,?,?);";
+        final String sql = "INSERT INTO round(gameId, guess, guessTime, result) "
+                + "VALUES(?,?,?, ?);";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         
         jdbcTemplate.update((Connection conn) -> {
@@ -42,7 +43,8 @@ public class RoundDaoDB implements RoundDao {
                     Statement.RETURN_GENERATED_KEYS);
         statement.setInt(1, round.getGameId());
         statement.setInt(2, round.getGuess());
-        statement.setString(3, round.getResult());
+        statement.setTimestamp(3, Timestamp.valueOf(round.getGuessTime()));
+        statement.setString(4, round.getResult());
         return statement;
         
         }, keyHolder);
@@ -62,7 +64,8 @@ public class RoundDaoDB implements RoundDao {
        public Round mapRow(ResultSet rs, int index) throws SQLException {
            Round round = new Round(rs.getInt("roundId"),
                             rs.getInt("gameId"),
-           rs.getInt("guess"), rs.getTimestamp("guessTime").toLocalDateTime(),
+           rs.getInt("guess"), 
+                   rs.getTimestamp("guessTime").toLocalDateTime(),
            rs.getString("result"));
            return round;
        }
