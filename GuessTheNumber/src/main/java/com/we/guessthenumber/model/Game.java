@@ -4,6 +4,8 @@
  */
 package com.we.guessthenumber.model;
 
+import java.util.Objects;
+
 /**
  *
  * @author ciruf
@@ -21,6 +23,11 @@ public class Game {
     
     public Game(String answer) {
         this.answer = answer;
+    }
+    
+    public Game(String answer, boolean inProgress) {
+        this.answer = answer;
+        this.inProgress = inProgress;
     }
     
     public Game(int gameId, String answer, boolean inProgress) {
@@ -53,4 +60,42 @@ public class Game {
     public void setInProgress(boolean inProgress) {
         this.inProgress = inProgress;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + this.gameId;
+        hash = 53 * hash + Objects.hashCode(this.answer);
+        hash = 53 * hash + (this.inProgress ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Game other = (Game) obj;
+        if (this.gameId != other.gameId) {
+            return false;
+        }
+        if (this.inProgress != other.inProgress) {
+            return false;
+        }
+        return Objects.equals(this.answer, other.answer);
+    } 
+
+    @Override
+    public String toString() {
+        return "Game{" + "gameId=" + gameId + ", answer=" + answer + ", inProgress=" + inProgress + '}';
+    }
+   
+    
+    
 }

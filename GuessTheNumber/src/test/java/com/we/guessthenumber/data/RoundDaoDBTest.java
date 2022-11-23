@@ -4,8 +4,10 @@
  */
 package com.we.guessthenumber.data;
 
+import com.we.guessthenumber.TestApplicationConfiguration;
 import com.we.guessthenumber.model.Game;
 import com.we.guessthenumber.model.Round;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -14,12 +16,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  *
  * @author ciruf
  */
+@ExtendWith(RoundParameterResolver.class)
+@ExtendWith(GameParameterResolver.class)
+@SpringBootTest(classes = TestApplicationConfiguration.class)
 public class RoundDaoDBTest {
     
     @Autowired
@@ -37,12 +44,12 @@ public class RoundDaoDBTest {
     
     @AfterAll
     public static void tearDownClass() {
+        
     }
     
     @BeforeEach
     public void setUp() {
         List<Game> allGames = gameDao.getAllGames();
-        List<Round> allRounds = new ArrayList<>();
         for (Game currentGame: allGames) {
             final int gameId = currentGame.getGameId();
             List<Round> roundsForGame = roundDao.getAllGameRounds(gameId);
@@ -55,20 +62,44 @@ public class RoundDaoDBTest {
     
     @AfterEach
     public void tearDown() {
+        List<Game> allGames = gameDao.getAllGames();
+        for (Game currentGame: allGames) {
+            final int gameId = currentGame.getGameId();
+            List<Round> roundsForGame = roundDao.getAllGameRounds(gameId);
+            for (Round currentRound: roundsForGame) {
+                roundDao.deleteRoundById(currentRound.getRoundId());
+            }
+            gameDao.deleteGameById(gameId);
+        }
     }
 
     /**
      * Test of addRound method, of class RoundDaoDB.
      */
     @Test
-    public void testAddRound() {
+    public void testAddRound(Round round, Game game) {
+        gameDao.addGame(game);
+        round.setGameId(game.getGameId());
+        final Round addedRound = roundDao.addRound(round);
+        assertEquals(round, addedRound);
     }
 
     /**
      * Test of getAllGameRounds method, of class RoundDaoDB.
      */
     @Test
-    public void testGetAllGameRounds() {
+    public void testGetAllGameRounds(Round round, Game game) {
+        final int TOTAL_ROUNDS = 2;
+        gameDao.addGame(game);
+        round.setGameId(game.getGameId());
+        final Round round2 = new Round(game.getGameId(),1011,
+                LocalDateTime.now(), "e:9:p:0");
+        roundDao.addRound(round);
+        roundDao.addRound(round2);
+        final List<Round> allRoundsForGame = roundDao.getAllGameRounds(game.getGameId());
+        assertEquals(TOTAL_ROUNDS, allRoundsForGame.size());
+        assertTrue(allRoundsForGame.contains(round));
+        assertTrue(allRoundsForGame.contains(round2));
     }
     
 }
