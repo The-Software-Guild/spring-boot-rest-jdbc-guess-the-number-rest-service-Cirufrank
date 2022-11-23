@@ -22,8 +22,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  *
- * @author ciruf
- */
+ * @author Cirũ Franklin (she/they), Software Engineer
+ * @course DI002 Full Stack Development Using Java and React (2210)
+ * @project Assessment: Guess the Number REST Service
+ * 
+ * @description This test suite ensures all the main methods of the RoundDaoDB
+ * are functioning correctly so that information is add, read, updated, 
+ * and deleted from the database as expected
+ * 
+ * 
+ * */
+
 @ExtendWith(RoundParameterResolver.class)
 @ExtendWith(GameParameterResolver.class)
 @SpringBootTest(classes = TestApplicationConfiguration.class)

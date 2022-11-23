@@ -18,11 +18,30 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+
 /**
  *
- * @author ciruf
- */
+ * @author Cirũ Franklin (she/they), Software Engineer
+ * @course DI002 Full Stack Development Using Java and React (2210)
+ * @project Assessment: Guess the Number REST Service
+ * 
+ * @description This class implements the RoundDao interface and defines the 
+ * methods for creating, reading, and deleting round information
+ * 
+ * 
+ * */
+
 @Repository
+//The @Repository annotation is a class-level 
+//annotation that tells Spring this is an injectable 
+//bean. Functionally, it's the same as @Component, but 
+//@Repository carries a bit more semantic value. The 
+//repository pattern presents a collection-like interface 
+//for a data store. We add, update, find, get, 
+//or delete without needing to know exactly how the data is 
+//stored. Most DAOs are repositories (or close to it), so 
+//we prefer @Repository over @Component.
+
 public class RoundDaoDB implements RoundDao {
     
     private final JdbcTemplate jdbcTemplate;

@@ -11,8 +11,19 @@ import java.util.Map;
 
 /**
  *
- * @author ciruf
- */
+ * @author Cirũ Franklin (she/they), Software Engineer
+ * @course DI002 Full Stack Development Using Java and React (2210)
+ * @project Assessment: Guess the Number REST Service
+ * 
+ * @description This interface declares the methods containing the 
+ * business logic of our application and allows games to be initiated, 
+ * guesses to generate rounds, rounds in progress to have their 
+ * answers hidden when retrieved, and new game to have a random answer 
+ * generated for them
+ * 
+ * 
+ * */
+
 public interface GuessTheNumberServiceLayer {
     
      /**

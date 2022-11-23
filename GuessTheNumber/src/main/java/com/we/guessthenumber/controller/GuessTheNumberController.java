@@ -23,9 +23,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author ciruf
+ * @author Cirũ Franklin (she/they), Software Engineer
+ * @course DI002 Full Stack Development Using Java and React (2210)
+ * @project Assessment: Guess the Number REST Service
+ * 
+ * @description This controller acts as our application's API and defines 
+ * the endpoints and request verbs that must be hit in order to kick off our 
+ * defined methods
+ * 
  */
+
 @RestController
+//The RestController annotation makes our class injectable
+//, tells Spring MVS to scan for methods that can handle
+//HTTP requests, and tells Spring to convert method
+//results into JSON
 @RequestMapping("/api/guess-the-number")
 public class GuessTheNumberController {
     

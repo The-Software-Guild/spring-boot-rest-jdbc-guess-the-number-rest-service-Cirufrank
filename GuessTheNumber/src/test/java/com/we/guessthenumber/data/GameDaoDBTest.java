@@ -20,8 +20,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 /**
  *
- * @author ciruf
- */
+ * @author Cirũ Franklin (she/they), Software Engineer
+ * @course DI002 Full Stack Development Using Java and React (2210)
+ * @project Assessment: Guess the Number REST Service
+ * 
+ * @description This test suite ensures all the main methods of the GameDaoDB
+ * are functioning correctly so that information is add, read, updated, 
+ * and deleted from the database as expected
+ * 
+ * 
+ * */
+
 @ExtendWith(GameParameterResolver.class)
 @SpringBootTest(classes = TestApplicationConfiguration.class)
 public class GameDaoDBTest {
@@ -45,7 +54,6 @@ public class GameDaoDBTest {
     @BeforeEach
     public void setUp() {
         List<Game> allGames = gameDao.getAllGames();
-        List<Round> allRounds = new ArrayList<>();
         for (Game currentGame: allGames) {
             final int gameId = currentGame.getGameId();
             List<Round> roundsForGame = roundDao.getAllGameRounds(gameId);
@@ -59,7 +67,6 @@ public class GameDaoDBTest {
     @AfterEach
     public void tearDown() {
         List<Game> allGames = gameDao.getAllGames();
-        List<Round> allRounds = new ArrayList<>();
         for (Game currentGame: allGames) {
             final int gameId = currentGame.getGameId();
             List<Round> roundsForGame = roundDao.getAllGameRounds(gameId);

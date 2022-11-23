@@ -13,8 +13,16 @@ import org.springframework.context.annotation.FilterType;
 
 /**
  *
- * @author ciruf
+ * @author Cirũ Franklin (she/they), Software Engineer
+ * @course DI002 Full Stack Development Using Java and React (2210)
+ * @project Assessment: Guess the Number REST Service
+ * 
+ * @description This configuration allows us to run our tests without starting our 
+ * program by completing all the tasks the SPringBootApplication
+ * annotation does while ignoring any CommandLineRunner classes
+ * 
  */
+
 @Configuration
 @ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
         value = CommandLineRunner.class))

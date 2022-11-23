@@ -10,8 +10,16 @@ import java.util.Objects;
 
 /**
  *
- * @author ciruf
- */
+ * @author Cirũ Franklin (she/they), Software Engineer
+ * @course DI002 Full Stack Development Using Java and React (2210)
+ * @project Assessment: Guess the Number REST Service
+ * 
+ * @description This class represents a Round and represents the information
+ * this entity contains within the database
+ * 
+ * 
+ * */
+
 public class Round {
     
     private int roundId, gameId, guess;
