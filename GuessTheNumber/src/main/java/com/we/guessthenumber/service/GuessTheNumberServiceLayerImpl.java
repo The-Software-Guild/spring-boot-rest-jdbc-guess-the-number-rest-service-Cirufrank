@@ -110,18 +110,23 @@ public class GuessTheNumberServiceLayerImpl implements GuessTheNumberServiceLaye
         for (int index = 0; index < guessTokens.size(); index += 1) {
             final int curGuessDigit = guessTokens.get(index);
             final int curAnswerDigit = answerTokens.get(index);
+            if (curGuessDigit == curAnswerDigit) {
+                continue;
+            }
             final int totalExactMatchesOfDigit = 
                     new ArrayList(exactMatches.values().stream()
+                    .filter(match -> match == curGuessDigit).
+                    collect(Collectors.toList())).size();
+            final int totalPartialMatchesOfDigit = 
+                    new ArrayList(partialMatches.stream()
                     .filter(match -> match == curGuessDigit).
                     collect(Collectors.toList())).size();
             final int totalOccurencesOfDigit = new ArrayList(answerTokens.stream()
                     .filter(match -> match == curGuessDigit).
                     collect(Collectors.toList())).size();
-            if (curGuessDigit == curAnswerDigit) {
-                continue;
-            }
+            
             if (answerTokens.contains(curGuessDigit) &&
-                    totalExactMatchesOfDigit < totalOccurencesOfDigit) {
+                    totalExactMatchesOfDigit + totalPartialMatchesOfDigit < totalOccurencesOfDigit) {
                 partialMatches.add(curAnswerDigit);
             }
         }
